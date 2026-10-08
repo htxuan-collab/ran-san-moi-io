@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Rắn Săn Mồi .IO - Ultra Performance</title>
+    <title>Rắn Săn Mồi .IO - Audio Restored</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script>
     <style>
@@ -104,7 +104,7 @@
                     <div class="opt-btn" data-val="pro">🔥 Cao Thủ</div>
                 </div>
 
-                <div class="section-label">3. CHỌN ĐẦU RẮN (6 MẪU)</div>
+                <div class="section-label">3. CHỌN ĐẦU RẮN</div>
                 <div class="grid-options" id="head-select">
                     <div class="opt-btn active" data-val="dragon">🐉 Rồng</div>
                     <div class="opt-btn" data-val="neon">⚡ Cyber</div>
@@ -114,17 +114,17 @@
                     <div class="opt-btn" data-val="classic">🟢 Cổ Điển</div>
                 </div>
 
-                <div class="section-label">4. CHỌN THÂN RẮN (6 MẪU)</div>
+                <div class="section-label">4. CHỌN THÂN RẮN</div>
                 <div class="grid-options" id="body-select">
                     <div class="opt-btn active" data-val="solid">🎨 Đơn Sắc</div>
                     <div class="opt-btn" data-val="stripe">💈 Sọc Laser</div>
                     <div class="opt-btn" data-val="glow">✨ Đốm Sáng</div>
                     <div class="opt-btn" data-val="rainbow">🌈 Rainbow</div>
                     <div class="opt-btn" data-val="galaxy">🌌 Vũ Trụ</div>
-                    <div class="opt-btn" data-val="scale">🛡️ Vảy Cả</div>
+                    <div class="opt-btn" data-val="scale">🛡️ Vảy Cá</div>
                 </div>
 
-                <div class="section-label">5. CHỌN MÀU MẶC ĐỊNH</div>
+                <div class="section-label">5. CHỌN MÀU CHỦ ĐẠO</div>
                 <div class="color-row" id="color-select">
                     <div class="color-dot active" style="background:#8b5cf6;" data-color="#8b5cf6"></div>
                     <div class="color-dot" style="background:#ec4899;" data-color="#ec4899"></div>
@@ -170,6 +170,70 @@
     </div>
 
     <script>
+        // HỆ THỐNG ÂM THANH (AUDIO SYNTHESIZER)
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioCtx();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playEatSound() {
+            if (!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.08);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.08);
+            } catch(e) {}
+        }
+
+        function playGameOverSound() {
+            if (!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.4);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.4);
+            } catch(e) {}
+        }
+
+        function playStartSound() {
+            if (!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.2);
+            } catch(e) {}
+        }
+
         const socket = io();
         const canvas = document.getElementById('game-canvas');
         const ctx = canvas.getContext('2d');
@@ -208,6 +272,8 @@
         bindGroup('color-select', val => selectedColor = val);
 
         document.getElementById('btn-start').addEventListener('click', () => {
+            initAudio();
+            playStartSound();
             const name = document.getElementById('nickname').value.trim() || "Chiến Binh";
             socket.emit('join', { name, room: selectedRoom, headType: selectedHead, bodyStyle: selectedBody, color: selectedColor });
             document.getElementById('lobby-menu').style.display = 'none';
@@ -215,6 +281,7 @@
         });
 
         document.getElementById('btn-restart').addEventListener('click', () => {
+            initAudio();
             document.getElementById('gameover-modal').style.display = 'none';
             document.getElementById('lobby-menu').style.display = 'flex';
         });
@@ -236,10 +303,14 @@
 
             if (myId && players[myId]) {
                 const me = players[myId];
+                if (me.score > prevScore && prevScore !== 0) {
+                    playEatSound();
+                }
                 prevScore = me.score;
                 document.getElementById('my-score').innerText = me.score;
                 document.getElementById('my-lives').innerText = '❤️'.repeat(me.lives);
             } else if (myId && !players[myId] && document.getElementById('hud-layer').style.display === 'block') {
+                playGameOverSound();
                 document.getElementById('hud-layer').style.display = 'none';
                 document.getElementById('final-score').innerText = prevScore;
                 document.getElementById('gameover-modal').style.display = 'flex';
@@ -282,7 +353,7 @@
             Object.values(players).forEach(p => {
                 if (!p.body || p.body.length === 0) return;
 
-                // THÂN RẮN NÂNG CẤP (6 LOẠI)
+                // Thân rắn
                 for (let i = p.body.length - 1; i >= 1; i--) {
                     const seg = p.body[i];
                     ctx.beginPath(); ctx.arc(seg.x, seg.y, 13, 0, Math.PI * 2);
@@ -304,7 +375,7 @@
                     ctx.fill();
                 }
 
-                // ĐẦU RẮN NÂNG CẤP (6 LOẠI)
+                // Đầu rắn
                 const head = p.body[0];
                 ctx.save();
                 ctx.translate(head.x, head.y);
