@@ -29,7 +29,6 @@
             cursor: crosshair;
         }
 
-        /* UI Overlay Container */
         .ui-layer {
             position: absolute;
             top: 0;
@@ -53,7 +52,6 @@
             justify-content: center;
             align-items: center;
             z-index: 100;
-            transition: opacity 0.4s ease;
         }
 
         .menu-card {
@@ -63,7 +61,7 @@
             padding: 40px;
             width: 380px;
             text-align: center;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(99, 102, 241, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         }
 
         .game-title {
@@ -71,9 +69,9 @@
             font-weight: 800;
             background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 8px;
-            letter-spacing: -0.5px;
         }
 
         .game-subtitle {
@@ -94,7 +92,6 @@
             margin-bottom: 8px;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .nickname-input {
@@ -106,12 +103,10 @@
             color: #fff;
             font-size: 1rem;
             outline: none;
-            transition: all 0.2s;
         }
 
         .nickname-input:focus {
             border-color: #6366f1;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
         }
 
         .btn-play {
@@ -125,12 +120,6 @@
             font-weight: 700;
             cursor: pointer;
             box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
-            transition: all 0.2s;
-        }
-
-        .btn-play:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(79, 70, 229, 0.4);
         }
 
         /* IN-GAME HUD */
@@ -154,15 +143,7 @@
             font-size: 0.85rem;
             text-transform: uppercase;
             color: #94a3b8;
-            letter-spacing: 1px;
             margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .lb-list {
-            list-style: none;
         }
 
         .lb-item {
@@ -219,7 +200,6 @@
             padding: 40px;
             width: 360px;
             text-align: center;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
         }
 
         .go-title {
@@ -241,42 +221,30 @@
 
     <canvas id="game-canvas"></canvas>
 
-    <!-- UI LAYER -->
     <div class="ui-layer">
-        
-        <!-- MENU CHỜ -->
         <div id="lobby-menu" class="interactive">
             <div class="menu-card">
                 <h1 class="game-title">RẮN SĂN MỒI .IO</h1>
                 <p class="game-subtitle">Game nhập vai thời gian thực cực hay</p>
-                
                 <div class="input-group">
                     <label>Tên nhân vật</label>
                     <input type="text" id="nickname" class="nickname-input" placeholder="Nhập biệt danh..." maxlength="12" value="Rắn Săn Mồi">
                 </div>
-
                 <button id="btn-start" class="btn-play">VÀO CHƠI NGAY</button>
             </div>
         </div>
 
-        <!-- HUD TRONG GAME -->
         <div id="hud-layer">
-            <!-- BẢNG XẾP HẠNG -->
             <div class="leaderboard">
                 <h3>🏆 BẢNG XẾP HẠNG</h3>
-                <div class="lb-list" id="lb-items">
-                    <!-- Javascript sẽ nhét danh sách vào đây -->
-                </div>
+                <div class="lb-list" id="lb-items"></div>
             </div>
-
-            <!-- CHỈ SỐ BẢN THÂN -->
             <div class="stats-panel">
                 <div class="stat-lbl">Chiều dài rắn</div>
                 <div class="stat-val" id="my-score">0</div>
             </div>
         </div>
 
-        <!-- MÀN HÌNH GAME OVER -->
         <div id="gameover-modal" class="interactive">
             <div class="go-card">
                 <div class="go-title">BẠN ĐÃ THUA!</div>
@@ -285,7 +253,6 @@
                 <button id="btn-restart" class="btn-play" style="background: linear-gradient(135deg, #10b981, #059669);">CHƠI LẠI</button>
             </div>
         </div>
-
     </div>
 
     <script>
@@ -293,7 +260,6 @@
         const canvas = document.getElementById('game-canvas');
         const ctx = canvas.getContext('2d');
 
-        // Elements UI
         const lobbyMenu = document.getElementById('lobby-menu');
         const hudLayer = document.getElementById('hud-layer');
         const gameoverModal = document.getElementById('gameover-modal');
@@ -304,7 +270,6 @@
         const myScoreEl = document.getElementById('my-score');
         const finalScoreEl = document.getElementById('final-score');
 
-        // Window size
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -316,7 +281,6 @@
         let foods = [];
         let myId = null;
 
-        // Bắt đầu chơi
         btnStart.addEventListener('click', () => {
             const name = nicknameInput.value.trim() || "Rắn Săn Mồi";
             socket.emit('join', { name });
@@ -324,13 +288,11 @@
             hudLayer.style.display = 'block';
         });
 
-        // Chơi lại
         btnRestart.addEventListener('click', () => {
             gameoverModal.style.display = 'none';
             lobbyMenu.style.display = 'flex';
         });
 
-        // Điều khiển chuột
         window.addEventListener('mousemove', (e) => {
             if (!myId || !players[myId]) return;
             const mouseX = e.clientX - canvas.width / 2;
@@ -339,18 +301,15 @@
             socket.emit('turn', angle);
         });
 
-        // Lắng nghe cập nhật từ Server
         socket.on('init', (data) => { myId = data.id; });
 
         socket.on('state', (state) => {
             players = state.players;
             foods = state.foods;
             
-            // Cập nhật điểm & Bảng xếp hạng
             if (myId && players[myId]) {
                 myScoreEl.innerText = players[myId].score || 0;
             } else if (myId && !players[myId] && hudLayer.style.display === 'block') {
-                // Rắn đã chết
                 hudLayer.style.display = 'none';
                 finalScoreEl.innerText = myScoreEl.innerText;
                 gameoverModal.style.display = 'flex';
@@ -371,7 +330,6 @@
             });
         }
 
-        // Render Canvas Game
         function render() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -382,7 +340,7 @@
             ctx.save();
             ctx.translate(canvas.width / 2 - cameraX, canvas.height / 2 - cameraY);
 
-            // Vẽ lưới nền Lưới Grid Cyberpunk
+            // Vẽ Lưới Nền
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
             ctx.lineWidth = 1;
             const gridSize = 50;
@@ -393,22 +351,18 @@
                 ctx.beginPath(); ctx.moveTo(-2000, y); ctx.lineTo(2000, y); ctx.stroke();
             }
 
-            // Vẽ thức ăn có hiệu ứng phát sáng
+            // Vẽ Thức Ăn
             foods.forEach(f => {
                 ctx.beginPath();
                 ctx.arc(f.x, f.y, f.radius || 6, 0, Math.PI * 2);
                 ctx.fillStyle = f.color || '#f43f5e';
-                ctx.shadowColor = f.color || '#f43f5e';
-                ctx.shadowBlur = 10;
                 ctx.fill();
-                ctx.shadowBlur = 0;
             });
 
             // Vẽ Rắn người chơi
             Object.values(players).forEach(p => {
                 if (!p.body || p.body.length === 0) return;
 
-                // Thân rắn
                 for (let i = p.body.length - 1; i >= 0; i--) {
                     const seg = p.body[i];
                     ctx.beginPath();
@@ -417,7 +371,6 @@
                     ctx.fill();
                 }
 
-                // Tên người chơi
                 const head = p.body[0];
                 ctx.font = 'bold 14px Outfit';
                 ctx.fillStyle = '#ffffff';
