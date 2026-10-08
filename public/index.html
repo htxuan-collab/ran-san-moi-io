@@ -158,10 +158,17 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
-            padding: 10px 16px;
+            padding: 12px 20px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
         }
 
-        /* BẢN ĐỒ THU NHỎ (MINI MAP) */
+        .lives-box {
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+
         #minimap-container {
             position: absolute;
             bottom: 20px;
@@ -223,7 +230,7 @@
                     <button class="color-btn" style="background: #06b6d4;" data-color="#06b6d4"></button>
                 </div>
 
-                <button id="btn-start" class="btn-play">VÀO CHƠI</button>
+                <button id="btn-start" class="btn-play">VÀO CHƠI (3 MẠNG)</button>
             </div>
         </div>
 
@@ -233,11 +240,16 @@
                 <div id="lb-items"></div>
             </div>
             <div class="stats-panel">
-                <div style="font-size:0.7rem; color:#94a3b8;">CHIỀU DÀI</div>
-                <div style="font-size:1.4rem; font-weight:800; color:#10b981;" id="my-score">0</div>
+                <div>
+                    <div style="font-size:0.7rem; color:#94a3b8;">CHIỀU DÀI</div>
+                    <div style="font-size:1.4rem; font-weight:800; color:#10b981;" id="my-score">0</div>
+                </div>
+                <div>
+                    <div style="font-size:0.7rem; color:#94a3b8;">MẠNG SỐNG</div>
+                    <div class="lives-box" id="my-lives">❤️❤️❤️</div>
+                </div>
             </div>
 
-            <!-- Bản đồ thu nhỏ -->
             <div id="minimap-container">
                 <canvas id="minimap-canvas" width="110" height="110"></canvas>
             </div>
@@ -245,7 +257,7 @@
 
         <div id="gameover-modal" class="interactive">
             <div class="go-card">
-                <h2 style="color:#ef4444; font-size:1.8rem; margin-bottom:8px;">BẠN ĐÃ THUA!</h2>
+                <h2 style="color:#ef4444; font-size:1.8rem; margin-bottom:8px;">HẾT MẠNG!</h2>
                 <p style="color:#94a3b8; font-size:0.85rem;">Chiều dài đạt được:</p>
                 <div style="font-size:2.5rem; font-weight:900; margin:10px 0;" id="final-score">0</div>
                 <button id="btn-restart" class="btn-play" style="background: linear-gradient(135deg, #10b981, #059669);">CHƠI LẠI</button>
@@ -268,6 +280,7 @@
         const btnRestart = document.getElementById('btn-restart');
         const lbItems = document.getElementById('lb-items');
         const myScoreEl = document.getElementById('my-score');
+        const myLivesEl = document.getElementById('my-lives');
         const finalScoreEl = document.getElementById('final-score');
 
         let selectedColor = '#6366f1';
@@ -303,7 +316,6 @@
             lobbyMenu.style.display = 'flex';
         });
 
-        // ĐIỀU KHIỂN ĐA ĐIỂM DÀNH CHO ĐIỆN THOẠI & MÁY TÍNH
         function sendAngle(clientX, clientY) {
             if (!myId || !players[myId]) return;
             const dx = clientX - window.innerWidth / 2;
@@ -313,7 +325,6 @@
 
         window.addEventListener('mousemove', (e) => sendAngle(e.clientX, e.clientY));
 
-        // Touch Điện thoại
         function handleMobileTouch(e) {
             if (e.touches && e.touches.length > 0) {
                 sendAngle(e.touches[0].clientX, e.touches[0].clientY);
@@ -334,6 +345,8 @@
 
             if (myId && players[myId]) {
                 myScoreEl.innerText = players[myId].score || 0;
+                const lives = players[myId].lives || 0;
+                myLivesEl.innerText = '❤️'.repeat(lives);
             } else if (myId && !players[myId] && hudLayer.style.display === 'block') {
                 hudLayer.style.display = 'none';
                 finalScoreEl.innerText = myScoreEl.innerText;
@@ -403,12 +416,11 @@
                 ctx.font = 'bold 13px Outfit';
                 ctx.fillStyle = '#ffffff';
                 ctx.textAlign = 'center';
-                ctx.fillText(p.name, head.x, head.y - 20);
+                ctx.fillText(`${p.name} (${p.lives}❤️)`, head.x, head.y - 20);
             });
 
             ctx.restore();
 
-            // VẼ MINI MAP (BẢN ĐỒ THU NHỎ)
             renderMinimap();
 
             requestAnimationFrame(render);
@@ -418,7 +430,6 @@
             miniCtx.clearRect(0, 0, 110, 110);
             const scale = 110 / (mapSize * 2);
 
-            // Vẽ các chấm rắn trên mini map
             Object.values(players).forEach(p => {
                 const mx = (p.x + mapSize) * scale;
                 const my = (p.y + mapSize) * scale;
