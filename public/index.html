@@ -43,7 +43,7 @@
             pointer-events: auto;
         }
 
-        /* LOBBY CYBERPUNK VIP */
+        /* LOBBY UI */
         #lobby-menu {
             position: absolute;
             inset: 0;
@@ -59,111 +59,37 @@
             background: rgba(15, 23, 42, 0.75);
             border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 28px;
-            padding: 36px 32px;
+            padding: 32px 28px;
             width: 90%;
-            max-width: 400px;
+            max-width: 380px;
             text-align: center;
-            box-shadow: 0 0 50px rgba(99, 102, 241, 0.2), 0 20px 40px rgba(0, 0, 0, 0.6);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .menu-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 60%);
-            pointer-events: none;
-        }
-
-        .badge-live {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: #34d399;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            margin-bottom: 16px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .pulse-dot {
-            width: 6px;
-            height: 6px;
-            background-color: #34d399;
-            border-radius: 50%;
-            box-shadow: 0 0 8px #34d399;
+            box-shadow: 0 0 50px rgba(99, 102, 241, 0.2);
         }
 
         .game-title {
-            font-size: 2.3rem;
+            font-size: 2.2rem;
             font-weight: 900;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+            background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 6px;
-            text-shadow: 0 10px 20px rgba(0,0,0,0.5);
-        }
-
-        .game-subtitle {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            margin-bottom: 24px;
         }
 
         .input-group {
-            margin-bottom: 20px;
+            margin: 20px 0 16px 0;
             text-align: left;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 0.75rem;
-            color: #cbd5e1;
-            margin-bottom: 8px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .nickname-input {
             width: 100%;
-            padding: 14px 18px;
+            padding: 14px;
             background: rgba(30, 41, 59, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 14px;
+            border-radius: 12px;
             color: #fff;
             font-size: 1rem;
-            font-weight: 600;
             outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .nickname-input:focus {
-            border-color: #818cf8;
-            box-shadow: 0 0 15px rgba(129, 140, 248, 0.3);
-            background: rgba(30, 41, 59, 0.9);
-        }
-
-        /* Bảng Chọn Màu Rắn */
-        .color-picker-label {
-            display: block;
-            font-size: 0.75rem;
-            color: #cbd5e1;
-            margin-bottom: 8px;
-            font-weight: 700;
-            text-transform: uppercase;
-            text-align: left;
         }
 
         .color-options {
@@ -173,107 +99,93 @@
         }
 
         .color-btn {
-            width: 38px;
-            height: 38px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             border: 2px solid transparent;
             cursor: pointer;
-            transition: transform 0.2s ease, border-color 0.2s ease;
         }
 
         .color-btn.active {
-            transform: scale(1.2);
-            border-color: #ffffff;
-            box-shadow: 0 0 12px currentColor;
+            transform: scale(1.15);
+            border-color: #fff;
         }
 
         .btn-play {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
             border: none;
-            border-radius: 14px;
+            border-radius: 12px;
             color: #fff;
             font-size: 1.1rem;
             font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
-            transition: all 0.2s ease;
-            letter-spacing: 0.5px;
         }
 
-        .btn-play:active {
-            transform: scale(0.98);
-        }
-
-        /* IN-GAME HUD VIP */
+        /* HUD & MINI MAP */
         #hud-layer {
             display: none;
         }
 
         .leaderboard {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 16px;
+            right: 16px;
             background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 18px;
-            padding: 14px 18px;
-            min-width: 180px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-        }
-
-        .leaderboard h3 {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: #94a3b8;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
+            border-radius: 16px;
+            padding: 12px 16px;
+            min-width: 160px;
         }
 
         .lb-item {
             display: flex;
             justify-content: space-between;
             font-size: 0.85rem;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             font-weight: 700;
         }
 
-        .lb-item.me {
-            color: #38bdf8;
-        }
+        .lb-item.me { color: #38bdf8; }
 
         .stats-panel {
             position: absolute;
-            bottom: 24px;
-            left: 24px;
+            bottom: 20px;
+            left: 20px;
             background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 18px;
-            padding: 12px 20px;
+            border-radius: 16px;
+            padding: 10px 16px;
         }
 
-        .stat-val {
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: #10b981;
+        /* BẢN ĐỒ THU NHỎ (MINI MAP) */
+        #minimap-container {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 110px;
+            height: 110px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
         }
 
-        .stat-lbl {
-            font-size: 0.7rem;
-            color: #94a3b8;
-            text-transform: uppercase;
-            font-weight: 700;
+        #minimap-canvas {
+            width: 100%;
+            height: 100%;
         }
 
-        /* GAME OVER SCREEN */
+        /* GAME OVER */
         #gameover-modal {
             position: absolute;
             inset: 0;
-            background: rgba(3, 7, 18, 0.88);
-            backdrop-filter: blur(16px);
+            background: rgba(3, 7, 18, 0.9);
+            backdrop-filter: blur(12px);
             display: none;
             justify-content: center;
             align-items: center;
@@ -283,26 +195,11 @@
         .go-card {
             background: rgba(15, 23, 42, 0.85);
             border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 28px;
-            padding: 36px 32px;
+            border-radius: 24px;
+            padding: 32px;
             width: 90%;
-            max-width: 360px;
+            max-width: 340px;
             text-align: center;
-            box-shadow: 0 0 50px rgba(239, 68, 68, 0.2);
-        }
-
-        .go-title {
-            color: #ef4444;
-            font-size: 2rem;
-            font-weight: 900;
-            margin-bottom: 8px;
-        }
-
-        .go-score {
-            font-size: 2.8rem;
-            font-weight: 900;
-            color: #fff;
-            margin: 12px 0;
         }
     </style>
 </head>
@@ -313,19 +210,12 @@
     <div class="ui-layer">
         <div id="lobby-menu" class="interactive">
             <div class="menu-card">
-                <div class="badge-live">
-                    <span class="pulse-dot"></span> Server Online
-                </div>
                 <h1 class="game-title">RẮN SĂN MỒI</h1>
-                <p class="game-subtitle">Game Multiplayer Realtime Đỉnh Cao</p>
-                
                 <div class="input-group">
-                    <label>Biệt danh của bạn</label>
-                    <input type="text" id="nickname" class="nickname-input" placeholder="Nhập tên..." maxlength="12" value="Rắn Viễn Tưởng">
+                    <input type="text" id="nickname" class="nickname-input" placeholder="Tên của bạn..." maxlength="12" value="Rắn Viễn Tưởng">
                 </div>
 
-                <span class="color-picker-label">Màu sắc rắn</span>
-                <div class="color-options" id="color-picker">
+                <div class="color-options">
                     <button class="color-btn active" style="background: #6366f1;" data-color="#6366f1"></button>
                     <button class="color-btn" style="background: #ec4899;" data-color="#ec4899"></button>
                     <button class="color-btn" style="background: #10b981;" data-color="#10b981"></button>
@@ -333,27 +223,32 @@
                     <button class="color-btn" style="background: #06b6d4;" data-color="#06b6d4"></button>
                 </div>
 
-                <button id="btn-start" class="btn-play">BẮT ĐẦU CHIẾN</button>
+                <button id="btn-start" class="btn-play">VÀO CHƠI</button>
             </div>
         </div>
 
         <div id="hud-layer">
             <div class="leaderboard">
-                <h3>🏆 BẢNG XẾP HẠNG</h3>
-                <div class="lb-list" id="lb-items"></div>
+                <h3 style="font-size:0.75rem; color:#94a3b8; margin-bottom:8px;">🏆 XẾP HẠNG</h3>
+                <div id="lb-items"></div>
             </div>
             <div class="stats-panel">
-                <div class="stat-lbl">Chiều dài</div>
-                <div class="stat-val" id="my-score">0</div>
+                <div style="font-size:0.7rem; color:#94a3b8;">CHIỀU DÀI</div>
+                <div style="font-size:1.4rem; font-weight:800; color:#10b981;" id="my-score">0</div>
+            </div>
+
+            <!-- Bản đồ thu nhỏ -->
+            <div id="minimap-container">
+                <canvas id="minimap-canvas" width="110" height="110"></canvas>
             </div>
         </div>
 
         <div id="gameover-modal" class="interactive">
             <div class="go-card">
-                <div class="go-title">BẠN ĐÃ THUA!</div>
-                <p style="color: #94a3b8; font-size: 0.9rem;">Chiều dài tối đa đạt được:</p>
-                <div class="go-score" id="final-score">0</div>
-                <button id="btn-restart" class="btn-play" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">CHƠI LẠI</button>
+                <h2 style="color:#ef4444; font-size:1.8rem; margin-bottom:8px;">BẠN ĐÃ THUA!</h2>
+                <p style="color:#94a3b8; font-size:0.85rem;">Chiều dài đạt được:</p>
+                <div style="font-size:2.5rem; font-weight:900; margin:10px 0;" id="final-score">0</div>
+                <button id="btn-restart" class="btn-play" style="background: linear-gradient(135deg, #10b981, #059669);">CHƠI LẠI</button>
             </div>
         </div>
     </div>
@@ -362,6 +257,8 @@
         const socket = io();
         const canvas = document.getElementById('game-canvas');
         const ctx = canvas.getContext('2d');
+        const miniCanvas = document.getElementById('minimap-canvas');
+        const miniCtx = miniCanvas.getContext('2d');
 
         const lobbyMenu = document.getElementById('lobby-menu');
         const hudLayer = document.getElementById('hud-layer');
@@ -377,7 +274,7 @@
         let players = {};
         let foods = [];
         let myId = null;
-        let mapSize = 2000;
+        let mapSize = 1500;
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -386,9 +283,8 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        // Chọn Màu
         document.querySelectorAll('.color-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.addEventListener('click', () => {
                 document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 selectedColor = btn.getAttribute('data-color');
@@ -407,29 +303,24 @@
             lobbyMenu.style.display = 'flex';
         });
 
-        // HỆ THỐNG ĐIỀU KHIỂN CẢM ỨNG ĐIỆN THOẠI & CHUỘT MƯỢT MÀ
-        function sendTargetAngle(clientX, clientY) {
+        // ĐIỀU KHIỂN ĐA ĐIỂM DÀNH CHO ĐIỆN THOẠI & MÁY TÍNH
+        function sendAngle(clientX, clientY) {
             if (!myId || !players[myId]) return;
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const dx = clientX - centerX;
-            const dy = clientY - centerY;
-            const angle = Math.atan2(dy, dx);
-            socket.emit('turn', angle);
+            const dx = clientX - window.innerWidth / 2;
+            const dy = clientY - window.innerHeight / 2;
+            socket.emit('turn', Math.atan2(dy, dx));
         }
 
-        // Chuột
-        window.addEventListener('mousemove', (e) => sendTargetAngle(e.clientX, e.clientY));
+        window.addEventListener('mousemove', (e) => sendAngle(e.clientX, e.clientY));
 
-        // Cảm ứng Vuốt Điện thoại (Touch Dragging Smooth)
-        function handleTouch(e) {
+        // Touch Điện thoại
+        function handleMobileTouch(e) {
             if (e.touches && e.touches.length > 0) {
-                e.preventDefault();
-                sendTargetAngle(e.touches[0].clientX, e.touches[0].clientY);
+                sendAngle(e.touches[0].clientX, e.touches[0].clientY);
             }
         }
-        window.addEventListener('touchstart', handleTouch, { passive: false });
-        window.addEventListener('touchmove', handleTouch, { passive: false });
+        window.addEventListener('touchstart', handleMobileTouch, { passive: true });
+        window.addEventListener('touchmove', handleMobileTouch, { passive: true });
 
         socket.on('init', (data) => {
             myId = data.id;
@@ -463,8 +354,7 @@
             });
         }
 
-        // VÒNG LẶP RENDER MƯỢT 60 FPS BẰNG requestAnimationFrame
-        function renderLoop() {
+        function render() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             const me = players[myId];
@@ -474,38 +364,33 @@
             ctx.save();
             ctx.translate(canvas.width / 2 - cameraX, canvas.height / 2 - cameraY);
 
-            // 1. Ranh Giới Đỏ Chết
+            // 1. Ranh giới vách đỏ
             ctx.strokeStyle = '#ef4444';
             ctx.lineWidth = 12;
             ctx.strokeRect(-mapSize, -mapSize, mapSize * 2, mapSize * 2);
 
-            // 2. Lưới Nền Cyberpunk
+            // 2. Lưới ô vuông
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
             ctx.lineWidth = 1;
-            const gridSize = 60;
-            for (let x = -mapSize; x <= mapSize; x += gridSize) {
+            for (let x = -mapSize; x <= mapSize; x += 60) {
                 ctx.beginPath(); ctx.moveTo(x, -mapSize); ctx.lineTo(x, mapSize); ctx.stroke();
             }
-            for (let y = -mapSize; y <= mapSize; y += gridSize) {
+            for (let y = -mapSize; y <= mapSize; y += 60) {
                 ctx.beginPath(); ctx.moveTo(-mapSize, y); ctx.lineTo(mapSize, y); ctx.stroke();
             }
 
-            // 3. Thức Ăn Phát Sáng
+            // 3. Thức ăn
             foods.forEach(f => {
                 ctx.beginPath();
                 ctx.arc(f.x, f.y, f.radius || 6, 0, Math.PI * 2);
                 ctx.fillStyle = f.color || '#f43f5e';
-                ctx.shadowColor = f.color || '#f43f5e';
-                ctx.shadowBlur = 8;
                 ctx.fill();
-                ctx.shadowBlur = 0;
             });
 
-            // 4. Rắn Người Chơi
+            // 4. Rắn người chơi
             Object.values(players).forEach(p => {
                 if (!p.body || p.body.length === 0) return;
 
-                // Thân rắn
                 for (let i = p.body.length - 1; i >= 0; i--) {
                     const seg = p.body[i];
                     ctx.beginPath();
@@ -514,19 +399,37 @@
                     ctx.fill();
                 }
 
-                // Tên người chơi
                 const head = p.body[0];
                 ctx.font = 'bold 13px Outfit';
                 ctx.fillStyle = '#ffffff';
                 ctx.textAlign = 'center';
-                ctx.fillText(p.name, head.x, head.y - 22);
+                ctx.fillText(p.name, head.x, head.y - 20);
             });
 
             ctx.restore();
-            requestAnimationFrame(renderLoop);
+
+            // VẼ MINI MAP (BẢN ĐỒ THU NHỎ)
+            renderMinimap();
+
+            requestAnimationFrame(render);
         }
 
-        requestAnimationFrame(renderLoop);
+        function renderMinimap() {
+            miniCtx.clearRect(0, 0, 110, 110);
+            const scale = 110 / (mapSize * 2);
+
+            // Vẽ các chấm rắn trên mini map
+            Object.values(players).forEach(p => {
+                const mx = (p.x + mapSize) * scale;
+                const my = (p.y + mapSize) * scale;
+                miniCtx.beginPath();
+                miniCtx.arc(mx, my, p.id === myId ? 3.5 : 2, 0, Math.PI * 2);
+                miniCtx.fillStyle = p.id === myId ? '#38bdf8' : '#ef4444';
+                miniCtx.fill();
+            });
+        }
+
+        requestAnimationFrame(render);
     </script>
 </body>
 </html>
