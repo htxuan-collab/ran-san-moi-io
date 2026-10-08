@@ -9,7 +9,7 @@ const io = new Server(server);
 app.use(express.static('public'));
 
 const PORT = process.env.PORT || 3000;
-const MAP_SIZE = 2000; // Kích thước bản đồ từ -2000 đến 2000
+const MAP_SIZE = 2000;
 
 let players = {};
 let foods = [];
@@ -17,14 +17,14 @@ let foods = [];
 function createFood() {
     return {
         id: Math.random().toString(36).substr(2, 9),
-        x: (Math.random() - 0.5) * (MAP_SIZE * 2 - 100),
-        y: (Math.random() - 0.5) * (MAP_SIZE * 2 - 100),
-        radius: Math.floor(Math.random() * 4) + 5,
-        color: `hsl(${Math.floor(Math.random() * 360)}, 80%, 60%)`
+        x: (Math.random() - 0.5) * (MAP_SIZE * 2 - 200),
+        y: (Math.random() - 0.5) * (MAP_SIZE * 2 - 200),
+        radius: Math.floor(Math.random() * 4) + 6,
+        color: `hsl(${Math.floor(Math.random() * 360)}, 85%, 65%)`
     };
 }
 
-for (let i = 0; i < 150; i++) {
+for (let i = 0; i < 200; i++) {
     foods.push(createFood());
 }
 
@@ -36,9 +36,9 @@ io.on('connection', (socket) => {
             x: (Math.random() - 0.5) * 1000,
             y: (Math.random() - 0.5) * 1000,
             angle: 0,
-            speed: 3,
+            speed: 4,
             score: 10,
-            color: `hsl(${Math.floor(Math.random() * 360)}, 80%, 60%)`,
+            color: data.color || '#6366f1',
             body: []
         };
         socket.emit('init', { id: socket.id, mapSize: MAP_SIZE });
@@ -55,33 +55,33 @@ io.on('connection', (socket) => {
     });
 });
 
-// Game Loop (60 FPS)
+// Loop cập nhật Server (60 Tick Rate)
 setInterval(() => {
     Object.keys(players).forEach(id => {
         const p = players[id];
         if (!p) return;
 
-        // Cập nhật vị trí đầu rắn
+        // Di chuyển
         p.x += Math.cos(p.angle) * p.speed;
         p.y += Math.sin(p.angle) * p.speed;
 
-        // CHECK VA CHẠM VÁCH BẢN ĐỒ
+        // Va chạm vách
         if (Math.abs(p.x) >= MAP_SIZE || Math.abs(p.y) >= MAP_SIZE) {
             delete players[id];
             return;
         }
 
-        // Cập nhật thân rắn
+        // Tạo mảng thân rắn
         p.body.unshift({ x: p.x, y: p.y });
-        if (p.body.length > p.score) {
+        if (p.body.length > p.score * 2) {
             p.body.pop();
         }
 
-        // Va chạm thức ăn
+        // Ăn thức ăn
         foods.forEach((f, idx) => {
             const dist = Math.hypot(p.x - f.x, p.y - f.y);
-            if (dist < 12 + f.radius) {
-                p.score += 2;
+            if (dist < 14 + f.radius) {
+                p.score += 1;
                 foods[idx] = createFood();
             }
         });

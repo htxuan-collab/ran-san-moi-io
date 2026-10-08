@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Rắn Săn Mồi .IO - Multiplayer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Rắn Săn Mồi .IO - Modern Cyberpunk</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script>
     <style>
         * {
@@ -13,6 +13,7 @@
             box-sizing: border-box;
             font-family: 'Outfit', sans-serif;
             user-select: none;
+            -webkit-user-select: none;
             touch-action: none;
         }
 
@@ -20,13 +21,13 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #0f172a;
+            background-color: #030712;
             color: #fff;
         }
 
         #game-canvas {
             display: block;
-            background: #090d16;
+            background: #060913;
         }
 
         .ui-layer {
@@ -42,12 +43,12 @@
             pointer-events: auto;
         }
 
-        /* LOBBY / MENU SCREEN */
+        /* LOBBY CYBERPUNK VIP */
         #lobby-menu {
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at center, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.98) 100%);
-            backdrop-filter: blur(12px);
+            background: radial-gradient(circle at center, rgba(17, 24, 39, 0.7) 0%, rgba(3, 7, 18, 0.95) 100%);
+            backdrop-filter: blur(16px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -55,24 +56,63 @@
         }
 
         .menu-card {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 30px;
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 28px;
+            padding: 36px 32px;
             width: 90%;
-            max-width: 380px;
+            max-width: 400px;
             text-align: center;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 50px rgba(99, 102, 241, 0.2), 0 20px 40px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .badge-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #34d399;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #34d399;
         }
 
         .game-title {
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
+            font-size: 2.3rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            text-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
 
         .game-subtitle {
@@ -88,67 +128,116 @@
 
         .input-group label {
             display: block;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #cbd5e1;
             margin-bottom: 8px;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .nickname-input {
             width: 100%;
             padding: 14px 18px;
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(30, 41, 59, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
+            border-radius: 14px;
             color: #fff;
             font-size: 1rem;
+            font-weight: 600;
             outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .nickname-input:focus {
+            border-color: #818cf8;
+            box-shadow: 0 0 15px rgba(129, 140, 248, 0.3);
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        /* Bảng Chọn Màu Rắn */
+        .color-picker-label {
+            display: block;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            margin-bottom: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-align: left;
+        }
+
+        .color-options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .color-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .color-btn.active {
+            transform: scale(1.2);
+            border-color: #ffffff;
+            box-shadow: 0 0 12px currentColor;
         }
 
         .btn-play {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             color: #fff;
             font-size: 1.1rem;
-            font-weight: 700;
+            font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
+            transition: all 0.2s ease;
+            letter-spacing: 0.5px;
         }
 
-        /* IN-GAME HUD */
+        .btn-play:active {
+            transform: scale(0.98);
+        }
+
+        /* IN-GAME HUD VIP */
         #hud-layer {
             display: none;
         }
 
         .leaderboard {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 12px 16px;
-            min-width: 160px;
+            top: 20px;
+            right: 20px;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 14px 18px;
+            min-width: 180px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
 
         .leaderboard h3 {
             font-size: 0.75rem;
             text-transform: uppercase;
             color: #94a3b8;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
         }
 
         .lb-item {
             display: flex;
             justify-content: space-between;
             font-size: 0.85rem;
-            margin-bottom: 4px;
-            font-weight: 600;
+            margin-bottom: 6px;
+            font-weight: 700;
         }
 
         .lb-item.me {
@@ -157,18 +246,18 @@
 
         .stats-panel {
             position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 12px 18px;
+            bottom: 24px;
+            left: 24px;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 12px 20px;
         }
 
         .stat-val {
-            font-size: 1.3rem;
-            font-weight: 800;
+            font-size: 1.5rem;
+            font-weight: 900;
             color: #10b981;
         }
 
@@ -176,14 +265,15 @@
             font-size: 0.7rem;
             color: #94a3b8;
             text-transform: uppercase;
+            font-weight: 700;
         }
 
         /* GAME OVER SCREEN */
         #gameover-modal {
             position: absolute;
             inset: 0;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(10px);
+            background: rgba(3, 7, 18, 0.88);
+            backdrop-filter: blur(16px);
             display: none;
             justify-content: center;
             align-items: center;
@@ -191,27 +281,28 @@
         }
 
         .go-card {
-            background: rgba(30, 41, 59, 0.9);
+            background: rgba(15, 23, 42, 0.85);
             border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 24px;
-            padding: 30px;
+            border-radius: 28px;
+            padding: 36px 32px;
             width: 90%;
             max-width: 360px;
             text-align: center;
+            box-shadow: 0 0 50px rgba(239, 68, 68, 0.2);
         }
 
         .go-title {
             color: #ef4444;
-            font-size: 1.8rem;
-            font-weight: 800;
-            margin-bottom: 10px;
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 8px;
         }
 
         .go-score {
-            font-size: 2.2rem;
-            font-weight: 800;
+            font-size: 2.8rem;
+            font-weight: 900;
             color: #fff;
-            margin: 15px 0;
+            margin: 12px 0;
         }
     </style>
 </head>
@@ -222,13 +313,27 @@
     <div class="ui-layer">
         <div id="lobby-menu" class="interactive">
             <div class="menu-card">
-                <h1 class="game-title">RẮN SĂN MỒI .IO</h1>
-                <p class="game-subtitle">Đồng bộ máy tính & Điện thoại</p>
-                <div class="input-group">
-                    <label>Tên nhân vật</label>
-                    <input type="text" id="nickname" class="nickname-input" placeholder="Nhập biệt danh..." maxlength="12" value="Rắn Săn Mồi">
+                <div class="badge-live">
+                    <span class="pulse-dot"></span> Server Online
                 </div>
-                <button id="btn-start" class="btn-play">VÀO CHƠI NGAY</button>
+                <h1 class="game-title">RẮN SĂN MỒI</h1>
+                <p class="game-subtitle">Game Multiplayer Realtime Đỉnh Cao</p>
+                
+                <div class="input-group">
+                    <label>Biệt danh của bạn</label>
+                    <input type="text" id="nickname" class="nickname-input" placeholder="Nhập tên..." maxlength="12" value="Rắn Viễn Tưởng">
+                </div>
+
+                <span class="color-picker-label">Màu sắc rắn</span>
+                <div class="color-options" id="color-picker">
+                    <button class="color-btn active" style="background: #6366f1;" data-color="#6366f1"></button>
+                    <button class="color-btn" style="background: #ec4899;" data-color="#ec4899"></button>
+                    <button class="color-btn" style="background: #10b981;" data-color="#10b981"></button>
+                    <button class="color-btn" style="background: #f59e0b;" data-color="#f59e0b"></button>
+                    <button class="color-btn" style="background: #06b6d4;" data-color="#06b6d4"></button>
+                </div>
+
+                <button id="btn-start" class="btn-play">BẮT ĐẦU CHIẾN</button>
             </div>
         </div>
 
@@ -238,7 +343,7 @@
                 <div class="lb-list" id="lb-items"></div>
             </div>
             <div class="stats-panel">
-                <div class="stat-lbl">Chiều dài rắn</div>
+                <div class="stat-lbl">Chiều dài</div>
                 <div class="stat-val" id="my-score">0</div>
             </div>
         </div>
@@ -246,9 +351,9 @@
         <div id="gameover-modal" class="interactive">
             <div class="go-card">
                 <div class="go-title">BẠN ĐÃ THUA!</div>
-                <p style="color: #94a3b8;">Chạm vách hoặc va chạm:</p>
+                <p style="color: #94a3b8; font-size: 0.9rem;">Chiều dài tối đa đạt được:</p>
                 <div class="go-score" id="final-score">0</div>
-                <button id="btn-restart" class="btn-play" style="background: linear-gradient(135deg, #10b981, #059669);">CHƠI LẠI</button>
+                <button id="btn-restart" class="btn-play" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">CHƠI LẠI</button>
             </div>
         </div>
     </div>
@@ -268,6 +373,12 @@
         const myScoreEl = document.getElementById('my-score');
         const finalScoreEl = document.getElementById('final-score');
 
+        let selectedColor = '#6366f1';
+        let players = {};
+        let foods = [];
+        let myId = null;
+        let mapSize = 2000;
+
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -275,14 +386,18 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        let players = {};
-        let foods = [];
-        let myId = null;
-        let mapSize = 2000;
+        // Chọn Màu
+        document.querySelectorAll('.color-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedColor = btn.getAttribute('data-color');
+            });
+        });
 
         btnStart.addEventListener('click', () => {
             const name = nicknameInput.value.trim() || "Rắn Săn Mồi";
-            socket.emit('join', { name });
+            socket.emit('join', { name, color: selectedColor });
             lobbyMenu.style.display = 'none';
             hudLayer.style.display = 'block';
         });
@@ -292,37 +407,40 @@
             lobbyMenu.style.display = 'flex';
         });
 
-        // Xử lý điều khiển (Cả Chuột & Cảm ứng Điện thoại)
-        function handlePointerMove(clientX, clientY) {
+        // HỆ THỐNG ĐIỀU KHIỂN CẢM ỨNG ĐIỆN THOẠI & CHUỘT MƯỢT MÀ
+        function sendTargetAngle(clientX, clientY) {
             if (!myId || !players[myId]) return;
-            const mouseX = clientX - canvas.width / 2;
-            const mouseY = clientY - canvas.height / 2;
-            const angle = Math.atan2(mouseY, mouseX);
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const dx = clientX - centerX;
+            const dy = clientY - centerY;
+            const angle = Math.atan2(dy, dx);
             socket.emit('turn', angle);
         }
 
-        window.addEventListener('mousemove', (e) => handlePointerMove(e.clientX, e.clientY));
-        window.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 0) {
-                handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
-            }
-        }, { passive: false });
-        window.addEventListener('touchstart', (e) => {
-            if (e.touches.length > 0) {
-                handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
-            }
-        }, { passive: false });
+        // Chuột
+        window.addEventListener('mousemove', (e) => sendTargetAngle(e.clientX, e.clientY));
 
-        socket.on('init', (data) => { 
-            myId = data.id; 
-            if(data.mapSize) mapSize = data.mapSize;
+        // Cảm ứng Vuốt Điện thoại (Touch Dragging Smooth)
+        function handleTouch(e) {
+            if (e.touches && e.touches.length > 0) {
+                e.preventDefault();
+                sendTargetAngle(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }
+        window.addEventListener('touchstart', handleTouch, { passive: false });
+        window.addEventListener('touchmove', handleTouch, { passive: false });
+
+        socket.on('init', (data) => {
+            myId = data.id;
+            if (data.mapSize) mapSize = data.mapSize;
         });
 
         socket.on('state', (state) => {
             players = state.players;
             foods = state.foods;
-            if(state.mapSize) mapSize = state.mapSize;
-            
+            if (state.mapSize) mapSize = state.mapSize;
+
             if (myId && players[myId]) {
                 myScoreEl.innerText = players[myId].score || 0;
             } else if (myId && !players[myId] && hudLayer.style.display === 'block') {
@@ -332,7 +450,6 @@
             }
 
             updateLeaderboard();
-            render();
         });
 
         function updateLeaderboard() {
@@ -346,7 +463,8 @@
             });
         }
 
-        function render() {
+        // VÒNG LẶP RENDER MƯỢT 60 FPS BẰNG requestAnimationFrame
+        function renderLoop() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             const me = players[myId];
@@ -356,15 +474,15 @@
             ctx.save();
             ctx.translate(canvas.width / 2 - cameraX, canvas.height / 2 - cameraY);
 
-            // 1. Vẽ Khung Vách Ranh Giới Đỏ (Nơi chạm vào sẽ chết)
+            // 1. Ranh Giới Đỏ Chết
             ctx.strokeStyle = '#ef4444';
-            ctx.lineWidth = 10;
+            ctx.lineWidth = 12;
             ctx.strokeRect(-mapSize, -mapSize, mapSize * 2, mapSize * 2);
 
-            // 2. Vẽ Lưới Nền
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+            // 2. Lưới Nền Cyberpunk
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
             ctx.lineWidth = 1;
-            const gridSize = 50;
+            const gridSize = 60;
             for (let x = -mapSize; x <= mapSize; x += gridSize) {
                 ctx.beginPath(); ctx.moveTo(x, -mapSize); ctx.lineTo(x, mapSize); ctx.stroke();
             }
@@ -372,18 +490,22 @@
                 ctx.beginPath(); ctx.moveTo(-mapSize, y); ctx.lineTo(mapSize, y); ctx.stroke();
             }
 
-            // 3. Vẽ Thức Ăn
+            // 3. Thức Ăn Phát Sáng
             foods.forEach(f => {
                 ctx.beginPath();
                 ctx.arc(f.x, f.y, f.radius || 6, 0, Math.PI * 2);
                 ctx.fillStyle = f.color || '#f43f5e';
+                ctx.shadowColor = f.color || '#f43f5e';
+                ctx.shadowBlur = 8;
                 ctx.fill();
+                ctx.shadowBlur = 0;
             });
 
-            // 4. Vẽ Rắn
+            // 4. Rắn Người Chơi
             Object.values(players).forEach(p => {
                 if (!p.body || p.body.length === 0) return;
 
+                // Thân rắn
                 for (let i = p.body.length - 1; i >= 0; i--) {
                     const seg = p.body[i];
                     ctx.beginPath();
@@ -392,15 +514,19 @@
                     ctx.fill();
                 }
 
+                // Tên người chơi
                 const head = p.body[0];
-                ctx.font = 'bold 14px Outfit';
+                ctx.font = 'bold 13px Outfit';
                 ctx.fillStyle = '#ffffff';
                 ctx.textAlign = 'center';
-                ctx.fillText(p.name, head.x, head.y - 20);
+                ctx.fillText(p.name, head.x, head.y - 22);
             });
 
             ctx.restore();
+            requestAnimationFrame(renderLoop);
         }
+
+        requestAnimationFrame(renderLoop);
     </script>
 </body>
 </html>
