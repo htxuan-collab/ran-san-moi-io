@@ -17,19 +17,33 @@ let rooms = {
     'pro': { name: 'Phòng Cao Thủ', players: {}, foods: [] }
 };
 
+const FRUIT_TYPES = [
+    { type: 'orb', icon: '🔮', points: 1, radius: 7 },
+    { type: 'apple', icon: '🍎', points: 2, radius: 10 },
+    { type: 'strawberry', icon: '🍓', points: 3, radius: 11 },
+    { type: 'banana', icon: '🍌', points: 3, radius: 12 },
+    { type: 'grape', icon: '🍇', points: 4, radius: 12 },
+    { type: 'orange', icon: '🍊', points: 2, radius: 10 }
+];
+
 function createFood() {
+    const fruit = FRUIT_TYPES[Math.floor(Math.random() * FRUIT_TYPES.length)];
     return {
         id: Math.random().toString(36).substr(2, 9),
         x: (Math.random() - 0.5) * (MAP_SIZE * 2 - 200),
         y: (Math.random() - 0.5) * (MAP_SIZE * 2 - 200),
-        radius: Math.floor(Math.random() * 4) + 6,
+        type: fruit.type,
+        icon: fruit.icon,
+        points: fruit.points,
+        radius: fruit.radius,
+        pulseOffset: Math.random() * Math.PI * 2,
         color: `hsl(${Math.floor(Math.random() * 360)}, 85%, 65%)`
     };
 }
 
-// Khởi tạo thức ăn cho từng phòng
+// Tạo thức ăn ban đầu
 Object.keys(rooms).forEach(rKey => {
-    for (let i = 0; i < 250; i++) {
+    for (let i = 0; i < 280; i++) {
         rooms[rKey].foods.push(createFood());
     }
 });
@@ -59,7 +73,7 @@ io.on('connection', (socket) => {
             score: 10,
             lives: 3,
             color: data.color || '#8b5cf6',
-            headType: data.headType || 'classic',
+            headType: data.headType || 'dragon',
             bodyStyle: data.bodyStyle || 'solid',
             body: []
         };
@@ -80,7 +94,6 @@ io.on('connection', (socket) => {
     });
 });
 
-// Game Loop 60 FPS
 setInterval(() => {
     Object.keys(rooms).forEach(rKey => {
         const room = rooms[rKey];
@@ -101,13 +114,12 @@ setInterval(() => {
                 p.body.pop();
             }
 
-            // Đâm vách
             if (Math.abs(p.x) >= MAP_SIZE || Math.abs(p.y) >= MAP_SIZE) {
                 hitPlayers.add(id);
             }
         });
 
-        // 2. Va chạm Đầu vào Thân
+        // 2. Va chạm
         Object.keys(players).forEach(idA => {
             const pA = players[idA];
             if (!pA || hitPlayers.has(idA)) return;
@@ -127,20 +139,17 @@ setInterval(() => {
             });
         });
 
-        // 3. Xử lý Mạng Sống & Mất Mạng
+        // 3. Mất mạng & rơi mồi
         hitPlayers.forEach(id => {
             const p = players[id];
             if (!p) return;
 
             p.body.forEach((seg, idx) => {
                 if (idx % 2 === 0) {
-                    foods.push({
-                        id: Math.random().toString(36).substr(2, 9),
-                        x: seg.x + (Math.random() - 0.5) * 15,
-                        y: seg.y + (Math.random() - 0.5) * 15,
-                        radius: 7,
-                        color: p.color
-                    });
+                    const f = createFood();
+                    f.x = seg.x + (Math.random() - 0.5) * 20;
+                    f.y = seg.y + (Math.random() - 0.5) * 20;
+                    foods.push(f);
                 }
             });
 
@@ -158,8 +167,8 @@ setInterval(() => {
             if (!p || hitPlayers.has(id)) return;
 
             foods.forEach((f, idx) => {
-                if (Math.hypot(p.x - f.x, p.y - f.y) < 15 + f.radius) {
-                    p.score += 1;
+                if (Math.hypot(p.x - f.x, p.y - f.y) < 16 + f.radius) {
+                    p.score += f.points;
                     foods[idx] = createFood();
                 }
             });
