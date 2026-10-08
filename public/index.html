@@ -3,15 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Rắn Săn Mồi .IO - Modern Cyberpunk</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <title>Rắn Săn Mồi .IO - Cyberpunk Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script>
     <style>
+        :root {
+            --primary: #8b5cf6;
+            --primary-glow: rgba(139, 92, 246, 0.5);
+            --cyan: #06b6d4;
+            --pink: #ec4899;
+            --bg-dark: #030712;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             user-select: none;
             -webkit-user-select: none;
             touch-action: none;
@@ -21,21 +29,18 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #030712;
+            background-color: var(--bg-dark);
             color: #fff;
         }
 
         #game-canvas {
             display: block;
-            background: #060913;
+            background: radial-gradient(circle at center, #0b1120 0%, #030712 100%);
         }
 
         .ui-layer {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             pointer-events: none;
         }
 
@@ -43,84 +48,165 @@
             pointer-events: auto;
         }
 
-        /* LOBBY UI */
+        /* LOBBY ULTRA CYBERPUNK */
         #lobby-menu {
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at center, rgba(17, 24, 39, 0.7) 0%, rgba(3, 7, 18, 0.95) 100%);
-            backdrop-filter: blur(16px);
+            background: radial-gradient(circle at 50% 40%, rgba(30, 27, 75, 0.6) 0%, rgba(3, 7, 18, 0.95) 100%);
+            backdrop-filter: blur(24px);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 100;
         }
 
+        /* Hiệu ứng hào quang nền */
+        #lobby-menu::before {
+            content: '';
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: linear-gradient(135deg, var(--primary), var(--cyan));
+            filter: blur(140px);
+            opacity: 0.35;
+            border-radius: 50%;
+            animation: pulseGlow 6s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(0.9); opacity: 0.25; }
+            100% { transform: scale(1.2); opacity: 0.45; }
+        }
+
         .menu-card {
-            background: rgba(15, 23, 42, 0.75);
+            position: relative;
+            background: rgba(15, 23, 42, 0.65);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 28px;
-            padding: 32px 28px;
+            border-top: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 32px;
+            padding: 40px 32px;
             width: 90%;
-            max-width: 380px;
+            max-width: 400px;
             text-align: center;
-            box-shadow: 0 0 50px rgba(99, 102, 241, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6),
+                        0 0 40px rgba(139, 92, 246, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            transform: translateY(0);
+            transition: all 0.3s ease;
         }
 
         .game-title {
+            font-family: 'Orbitron', sans-serif;
             font-size: 2.2rem;
             font-weight: 900;
-            background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #38bdf8 0%, #a855f7 50%, #ec4899 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 6px;
+            text-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+            margin-bottom: 4px;
+        }
+
+        .game-subtitle {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 28px;
         }
 
         .input-group {
-            margin: 20px 0 16px 0;
-            text-align: left;
+            position: relative;
+            margin-bottom: 24px;
         }
 
         .nickname-input {
             width: 100%;
-            padding: 14px;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
+            padding: 16px 20px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
             color: #fff;
             font-size: 1rem;
+            font-weight: 600;
             outline: none;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .nickname-input:focus {
+            border-color: #a855f7;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .color-section-title {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            text-align: left;
         }
 
         .color-options {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
+            background: rgba(15, 23, 42, 0.5);
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .color-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
             border: 2px solid transparent;
             cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .color-btn:hover {
+            transform: translateY(-3px) scale(1.05);
         }
 
         .color-btn.active {
-            transform: scale(1.15);
-            border-color: #fff;
+            transform: scale(1.12);
+            border-color: #ffffff;
+            box-shadow: 0 0 20px currentColor;
         }
 
         .btn-play {
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            padding: 18px;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
             border: none;
-            border-radius: 12px;
+            border-radius: 18px;
             color: #fff;
-            font-size: 1.1rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.05rem;
             font-weight: 800;
+            letter-spacing: 1.5px;
             cursor: pointer;
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-play:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(168, 85, 247, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-play:active {
+            transform: translateY(1px);
         }
 
         /* HUD & MINI MAP */
@@ -130,56 +216,84 @@
 
         .leaderboard {
             position: absolute;
-            top: 16px;
-            right: 16px;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(10px);
+            top: 20px;
+            right: 20px;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 12px 16px;
-            min-width: 160px;
+            border-radius: 20px;
+            padding: 16px 20px;
+            min-width: 180px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .lb-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            color: #a855f7;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 700;
         }
 
         .lb-item {
             display: flex;
             justify-content: space-between;
             font-size: 0.85rem;
-            margin-bottom: 4px;
-            font-weight: 700;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #cbd5e1;
         }
 
-        .lb-item.me { color: #38bdf8; }
+        .lb-item.me { color: #38bdf8; font-weight: 800; }
 
         .stats-panel {
             position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(10px);
+            bottom: 24px;
+            left: 24px;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 12px 20px;
+            border-radius: 20px;
+            padding: 14px 24px;
             display: flex;
-            gap: 20px;
+            gap: 28px;
             align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .stats-label {
+            font-size: 0.65rem;
+            color: #64748b;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .stats-val {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #38bdf8;
         }
 
         .lives-box {
-            font-size: 1.2rem;
-            letter-spacing: 2px;
+            font-size: 1.3rem;
+            letter-spacing: 4px;
         }
 
         #minimap-container {
             position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 110px;
-            height: 110px;
-            background: rgba(15, 23, 42, 0.8);
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            bottom: 24px;
+            right: 24px;
+            width: 120px;
+            height: 120px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 2px solid rgba(168, 85, 247, 0.4);
             border-radius: 50%;
             overflow: hidden;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.25);
+            backdrop-filter: blur(10px);
         }
 
         #minimap-canvas {
@@ -187,12 +301,12 @@
             height: 100%;
         }
 
-        /* GAME OVER */
+        /* GAME OVER MODAL */
         #gameover-modal {
             position: absolute;
             inset: 0;
-            background: rgba(3, 7, 18, 0.9);
-            backdrop-filter: blur(12px);
+            background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(16px);
             display: none;
             justify-content: center;
             align-items: center;
@@ -200,13 +314,14 @@
         }
 
         .go-card {
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(15, 23, 42, 0.8);
             border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 24px;
-            padding: 32px;
+            border-radius: 32px;
+            padding: 40px 32px;
             width: 90%;
-            max-width: 340px;
+            max-width: 360px;
             text-align: center;
+            box-shadow: 0 0 60px rgba(239, 68, 68, 0.25);
         }
     </style>
 </head>
@@ -215,51 +330,58 @@
     <canvas id="game-canvas"></canvas>
 
     <div class="ui-layer">
+        <!-- LOBBY MENU -->
         <div id="lobby-menu" class="interactive">
             <div class="menu-card">
                 <h1 class="game-title">RẮN SĂN MỒI</h1>
+                <div class="game-subtitle">MULTIPLAYER ARENA</div>
+
                 <div class="input-group">
-                    <input type="text" id="nickname" class="nickname-input" placeholder="Tên của bạn..." maxlength="12" value="Rắn Viễn Tưởng">
+                    <input type="text" id="nickname" class="nickname-input" placeholder="Nhập biệt danh..." maxlength="12" value="Chiến Binh">
                 </div>
 
+                <div class="color-section-title">CHỌN MÀU RẮN</div>
                 <div class="color-options">
-                    <button class="color-btn active" style="background: #6366f1;" data-color="#6366f1"></button>
-                    <button class="color-btn" style="background: #ec4899;" data-color="#ec4899"></button>
-                    <button class="color-btn" style="background: #10b981;" data-color="#10b981"></button>
-                    <button class="color-btn" style="background: #f59e0b;" data-color="#f59e0b"></button>
-                    <button class="color-btn" style="background: #06b6d4;" data-color="#06b6d4"></button>
+                    <button class="color-btn active" style="background: #8b5cf6; color: #8b5cf6;" data-color="#8b5cf6"></button>
+                    <button class="color-btn" style="background: #ec4899; color: #ec4899;" data-color="#ec4899"></button>
+                    <button class="color-btn" style="background: #10b981; color: #10b981;" data-color="#10b981"></button>
+                    <button class="color-btn" style="background: #f59e0b; color: #f59e0b;" data-color="#f59e0b"></button>
+                    <button class="color-btn" style="background: #06b6d4; color: #06b6d4;" data-color="#06b6d4"></button>
                 </div>
 
-                <button id="btn-start" class="btn-play">VÀO CHƠI (3 MẠNG)</button>
+                <button id="btn-start" class="btn-play">VÀO TRẬN (3 MẠNG)</button>
             </div>
         </div>
 
+        <!-- HUD LAYER -->
         <div id="hud-layer">
             <div class="leaderboard">
-                <h3 style="font-size:0.75rem; color:#94a3b8; margin-bottom:8px;">🏆 XẾP HẠNG</h3>
+                <div class="lb-title">🏆 TOP BẢNG XẾP HẠNG</div>
                 <div id="lb-items"></div>
             </div>
+
             <div class="stats-panel">
                 <div>
-                    <div style="font-size:0.7rem; color:#94a3b8;">CHIỀU DÀI</div>
-                    <div style="font-size:1.4rem; font-weight:800; color:#10b981;" id="my-score">0</div>
+                    <div class="stats-label">ĐIỂM SỐ</div>
+                    <div class="stats-val" id="my-score">0</div>
                 </div>
                 <div>
-                    <div style="font-size:0.7rem; color:#94a3b8;">MẠNG SỐNG</div>
+                    <div class="stats-label">MẠNG SỐNG</div>
                     <div class="lives-box" id="my-lives">❤️❤️❤️</div>
                 </div>
             </div>
 
             <div id="minimap-container">
-                <canvas id="minimap-canvas" width="110" height="110"></canvas>
+                <canvas id="minimap-canvas" width="120" height="120"></canvas>
             </div>
         </div>
 
+        <!-- GAME OVER MODAL -->
         <div id="gameover-modal" class="interactive">
             <div class="go-card">
-                <h2 style="color:#ef4444; font-size:1.8rem; margin-bottom:8px;">HẾT MẠNG!</h2>
-                <p style="color:#94a3b8; font-size:0.85rem;">Chiều dài đạt được:</p>
-                <div style="font-size:2.5rem; font-weight:900; margin:10px 0;" id="final-score">0</div>
+                <h2 style="font-family:'Orbitron'; color:#ef4444; font-size:1.8rem; margin-bottom:8px;">GAME OVER</h2>
+                <p style="color:#94a3b8; font-size:0.85rem; font-weight:600;">Điểm số cuối cùng:</p>
+                <div style="font-family:'Orbitron'; font-size:3rem; font-weight:900; color:#fff; margin:16px 0;" id="final-score">0</div>
                 <button id="btn-restart" class="btn-play" style="background: linear-gradient(135deg, #10b981, #059669);">CHƠI LẠI</button>
             </div>
         </div>
@@ -283,7 +405,7 @@
         const myLivesEl = document.getElementById('my-lives');
         const finalScoreEl = document.getElementById('final-score');
 
-        let selectedColor = '#6366f1';
+        let selectedColor = '#8b5cf6';
         let players = {};
         let foods = [];
         let myId = null;
@@ -305,7 +427,7 @@
         });
 
         btnStart.addEventListener('click', () => {
-            const name = nicknameInput.value.trim() || "Rắn Săn Mồi";
+            const name = nicknameInput.value.trim() || "Chiến Binh";
             socket.emit('join', { name, color: selectedColor });
             lobbyMenu.style.display = 'none';
             hudLayer.style.display = 'block';
@@ -377,13 +499,16 @@
             ctx.save();
             ctx.translate(canvas.width / 2 - cameraX, canvas.height / 2 - cameraY);
 
-            // 1. Ranh giới vách đỏ
+            // 1. Viền vách giới hạn Neon
             ctx.strokeStyle = '#ef4444';
-            ctx.lineWidth = 12;
+            ctx.lineWidth = 10;
+            ctx.shadowColor = '#ef4444';
+            ctx.shadowBlur = 20;
             ctx.strokeRect(-mapSize, -mapSize, mapSize * 2, mapSize * 2);
+            ctx.shadowBlur = 0; // reset glow
 
-            // 2. Lưới ô vuông
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+            // 2. Lưới ô vuông Cyberpunk
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
             ctx.lineWidth = 1;
             for (let x = -mapSize; x <= mapSize; x += 60) {
                 ctx.beginPath(); ctx.moveTo(x, -mapSize); ctx.lineTo(x, mapSize); ctx.stroke();
@@ -392,31 +517,41 @@
                 ctx.beginPath(); ctx.moveTo(-mapSize, y); ctx.lineTo(mapSize, y); ctx.stroke();
             }
 
-            // 3. Thức ăn
+            // 3. Hạt thức ăn Neon Phát Sáng
             foods.forEach(f => {
                 ctx.beginPath();
                 ctx.arc(f.x, f.y, f.radius || 6, 0, Math.PI * 2);
                 ctx.fillStyle = f.color || '#f43f5e';
+                ctx.shadowColor = f.color || '#f43f5e';
+                ctx.shadowBlur = 10;
                 ctx.fill();
             });
+            ctx.shadowBlur = 0; // reset
 
-            // 4. Rắn người chơi
+            // 4. Rắn Người Chơi
             Object.values(players).forEach(p => {
                 if (!p.body || p.body.length === 0) return;
 
+                // Thân rắn
                 for (let i = p.body.length - 1; i >= 0; i--) {
                     const seg = p.body[i];
                     ctx.beginPath();
-                    ctx.arc(seg.x, seg.y, 12, 0, Math.PI * 2);
-                    ctx.fillStyle = p.color || '#6366f1';
+                    ctx.arc(seg.x, seg.y, 13, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color || '#8b5cf6';
+                    if (i === 0) {
+                        ctx.shadowColor = p.color || '#8b5cf6';
+                        ctx.shadowBlur = 15;
+                    }
                     ctx.fill();
+                    ctx.shadowBlur = 0;
                 }
 
+                // Tên & Mạng
                 const head = p.body[0];
-                ctx.font = 'bold 13px Outfit';
+                ctx.font = 'bold 12px Plus Jakarta Sans';
                 ctx.fillStyle = '#ffffff';
                 ctx.textAlign = 'center';
-                ctx.fillText(`${p.name} (${p.lives}❤️)`, head.x, head.y - 20);
+                ctx.fillText(`${p.name} (${p.lives}❤️)`, head.x, head.y - 22);
             });
 
             ctx.restore();
@@ -427,16 +562,21 @@
         }
 
         function renderMinimap() {
-            miniCtx.clearRect(0, 0, 110, 110);
-            const scale = 110 / (mapSize * 2);
+            miniCtx.clearRect(0, 0, 120, 120);
+            const scale = 120 / (mapSize * 2);
 
             Object.values(players).forEach(p => {
                 const mx = (p.x + mapSize) * scale;
                 const my = (p.y + mapSize) * scale;
                 miniCtx.beginPath();
-                miniCtx.arc(mx, my, p.id === myId ? 3.5 : 2, 0, Math.PI * 2);
-                miniCtx.fillStyle = p.id === myId ? '#38bdf8' : '#ef4444';
+                miniCtx.arc(mx, my, p.id === myId ? 4 : 2.5, 0, Math.PI * 2);
+                miniCtx.fillStyle = p.id === myId ? '#38bdf8' : '#ec4899';
+                if (p.id === myId) {
+                    miniCtx.shadowColor = '#38bdf8';
+                    miniCtx.shadowBlur = 8;
+                }
                 miniCtx.fill();
+                miniCtx.shadowBlur = 0;
             });
         }
 
